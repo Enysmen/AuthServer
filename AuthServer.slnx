@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="authserver.client/authserver.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="AuthServer.Server/AuthServer.Server.csproj" />
+</Solution>
