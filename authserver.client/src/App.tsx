@@ -1,4 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
+import {type ServiceStatus} from './dtoservice.tsx';
+import { getServerStatus } from './api/status-api.ts';
 import './App.css';
 
 interface Forecast {
@@ -10,9 +12,13 @@ interface Forecast {
 
 function App() {
     const [forecasts, setForecasts] = useState<Forecast[]>();
+    const [serverStatus, setServerStatus] = useState<ServiceStatus>();
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorStatus, setErrorStatus] = useState<string | null>(null);
 
     useEffect(() => {
         populateWeatherData();
+        checkServerStatus();
     }, []);
 
     const contents = forecasts === undefined
@@ -42,6 +48,11 @@ function App() {
         <div>
             <h1 id="tableLabel">Weather forecast</h1>
             <p>This component demonstrates fetching data from the server.</p>
+            {isLoading && <p>Checking server status...</p>}
+            {serverStatus && (
+                <p>Server: {serverStatus.service}, Status: {serverStatus.status}</p>
+            )}
+            {errorStatus && <p className="text-danger">{errorStatus}</p>}
             {contents}
         </div>
     );
@@ -51,6 +62,22 @@ function App() {
         if (response.ok) {
             const data = await response.json();
             setForecasts(data);
+        }
+    }
+
+    async function checkServerStatus() {
+        try {
+            setIsLoading(true);
+            const response = await getServerStatus();
+            setServerStatus(response);
+        }
+        catch (error) {
+            console.error('Error checking server status:', error);
+            setErrorStatus('Failed to check server status');
+            setServerStatus(undefined);
+        }
+        finally {
+            setIsLoading(false);
         }
     }
 }
