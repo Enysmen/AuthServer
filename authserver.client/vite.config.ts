@@ -56,7 +56,8 @@ export default defineConfig({
                 secure: false
             }
         },
-        port: parseInt(env.DEV_SERVER_PORT || '49865'),
+        port: parseInt(env.DEV_SERVER_PORT || '5173'),
+        strictPort: true,
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
