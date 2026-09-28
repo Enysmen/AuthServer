@@ -1,0 +1,17 @@
+name: authserver
+
+services:
+  api:
+    image: authserver-api:dev
+    build:
+      context: .
+      dockerfile: AuthServer.Server/Dockerfile
+  web:
+      image: authserver-client:dev
+      build:
+        context: .
+        dockerfile: AuthServer.Client/Dockerfile
+      ports:
+        - "127.0.0.1:8081:80"
+      depends_on:
+        - api
