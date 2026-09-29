@@ -14,8 +14,9 @@ namespace AuthServer.Server.Controllers
     {
         
         string statusProcessing = "running"; 
-        string serviceName = "AuthServer"; 
+        string serviceName = "AuthServer";
 
+        [Tags("System")]
         [HttpGet]
         public IActionResult GetStatus()
         {
