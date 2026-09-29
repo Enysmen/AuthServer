@@ -44,6 +44,21 @@ function App() {
             </tbody>
         </table>;
 
+
+    return (
+        <div>
+            <h1 id="tableLabel">Weather forecast</h1>
+            <p>This component demonstrates fetching data from the server.</p>
+            {isLoading && <p>Checking server status...</p>}
+            {serverStatus && (
+                <p>Server: {serverStatus.service}, Status: {serverStatus.status}</p>
+            )}
+            {errorStatus && <p className="text-danger">{errorStatus}</p>}
+            {contents}
+        </div>
+    );
+
+
     async function populateWeatherData() {
         const response = await fetch('weatherforecast');
         if (response.ok) {
@@ -67,19 +82,6 @@ function App() {
             setIsLoading(false);
         }
     }
-
-    return (
-        <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {isLoading && <p>Checking server status...</p>}
-            {serverStatus && (
-                <p>Server: {serverStatus.service}, Status: {serverStatus.status}</p>
-            )}
-            {errorStatus && <p className="text-danger">{errorStatus}</p>}
-            {contents}
-        </div>
-    );
 
 }
 

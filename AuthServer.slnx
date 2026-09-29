@@ -4,4 +4,7 @@
     <Deploy />
   </Project>
   <Project Path="AuthServer.Server/AuthServer.Server.csproj" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>
