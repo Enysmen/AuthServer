@@ -1,3 +1,4 @@
+using Scalar.AspNetCore;
 
 namespace AuthServer.Server
 {
@@ -22,6 +23,9 @@ namespace AuthServer.Server
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapScalarApiReference(options => {
+                    options.WithTitle("AuthServer Api"); 
+                });
             }
 
             app.UseHttpsRedirection();
