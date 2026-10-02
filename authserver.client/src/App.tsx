@@ -10,7 +10,7 @@ interface Forecast {
     summary: string;
 }
 
-function App() {
+export const App = () => {
     const [forecasts, setForecasts] = useState<Forecast[]>();
     const [serverStatus, setServerStatus] = useState<ServiceStatus>();
     const [isLoading, setIsLoading] = useState(true);
