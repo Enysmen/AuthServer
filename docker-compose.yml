@@ -1,0 +1,29 @@
+name: authserver
+services:
+  api:
+    image: authserver-api:dev
+    build:
+      context: .
+      dockerfile: AuthServer.Server/Dockerfile
+  web:
+    image: authserver-client:dev
+    build:
+      context: .
+      dockerfile: authserver.client/Dockerfile
+    ports:
+        - "127.0.0.1:8081:80"
+    depends_on:
+      - api
+  db:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "EnterpriseDeveloper"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in .env}"
+    ports:
+      - "127.0.0.1:14330:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+volumes:
+  sql_data:

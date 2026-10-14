@@ -1,4 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
+import { type ServiceStatus } from './dtoservice.tsx';
+import { getServerStatus } from './api/status-api.ts';
 import './App.css';
 
 interface Forecast {
@@ -8,12 +10,43 @@ interface Forecast {
     summary: string;
 }
 
-function App() {
+export const App = () => {
     const [forecasts, setForecasts] = useState<Forecast[]>();
+    const [serverStatus, setServerStatus] = useState<ServiceStatus>();
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorStatus, setErrorStatus] = useState<string | null>(null);
 
+    
     useEffect(() => {
-        populateWeatherData();
+       const populateWeatherData = async () => {
+        const response = await fetch('weatherforecast');
+        if (response.ok) {
+            const data = await response.json();
+            setForecasts(data);
+        }
+    }
+
+
+    const checkServerStatus = async () => {
+        try {
+            setIsLoading(true);
+            const response = await getServerStatus();
+            setServerStatus(response);
+        }
+        catch (error) {
+            console.error('Error checking server status:', error);
+            setErrorStatus('Failed to check server status');
+            setServerStatus(undefined);
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
+
+    populateWeatherData();
+    checkServerStatus();
     }, []);
+
 
     const contents = forecasts === undefined
         ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
@@ -38,21 +71,21 @@ function App() {
             </tbody>
         </table>;
 
+
+
     return (
         <div>
             <h1 id="tableLabel">Weather forecast</h1>
             <p>This component demonstrates fetching data from the server.</p>
+            {isLoading && <p>Checking server status...</p>}
+            {serverStatus && (
+                <p>Server: {serverStatus.service}, Status: {serverStatus.status}</p>
+            )}
+            {errorStatus && <p className="text-danger">{errorStatus}</p>}
             {contents}
         </div>
     );
 
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        if (response.ok) {
-            const data = await response.json();
-            setForecasts(data);
-        }
-    }
 }
 
 export default App;
